@@ -10,6 +10,8 @@ import LoginScreen from "./(tabs)/index";
 import SignUpScreen from "./(tabs)/explore";
 import HomeScreen from "./(Screen)/home";
 import ProfileScreen from "./(Screen)/profileScreen";
+import EditProfileScreen from "@/app/(Screen)/editProfileScreen";
+import OtherProfileScreen from "@/app/(Screen)/otherProfile";
 import NotFoundScreen from "./+not-found";
 
 const Stack = createNativeStackNavigator();
@@ -21,7 +23,7 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 
 import { useColorScheme } from "@/hooks/useColorScheme";
-import EditProfile from "@/app/(Screen)/editProfileScreen";
+import SearchScreen from "@/app/(Screen)/searchScreen";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -49,8 +51,13 @@ export default function RootLayout() {
         <Stack.Screen name="SignUp" component={SignUpScreen} options={{ headerShown: false }}/>
 
         <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+
         <Stack.Screen name="Profile" component={ProfileScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="EditProfile" component={EditProfile} options={{ headerShown: false }}/>
+        <Stack.Screen name="EditProfile" component={EditProfileScreen} options={{ headerShown: false }}/>
+
+        <Stack.Screen name="Search" component={SearchScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="OtherProfile" component={OtherProfileScreen} options={{ headerShown: false }} />
+
         <Stack.Screen name="NotFound" component={NotFoundScreen} />
       </Stack.Navigator>
 

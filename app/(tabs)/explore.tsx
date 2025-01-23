@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as ImagePicker from 'expo-image-picker';
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import {
     View,
     Text,
@@ -14,8 +14,17 @@ import {
 } from "react-native";
 import {useNavigation} from "expo-router";
 import {ScrollView} from "react-native";
+import {ActivityIndicator} from "react-native";
 
 const {width, height} = Dimensions.get("window");
+
+interface SignupError {
+    username?: string;
+    email?: string;
+    password?: string;
+    confirmPassword?: string;
+}
+
 
 const SignUpScreen = () => {
     const navigation = useNavigation();
@@ -25,6 +34,7 @@ const SignUpScreen = () => {
     const [username, setUsername] = useState("");
     const [isLoading, setIsLoading] = useState(false);
     const [profilePictureZzz, setProfilePicture] = useState(null);
+    const [error, setError] = useState<SignupError>({});
 
     // Handle profile picture picking
     const pickImage = async () => {
@@ -52,23 +62,80 @@ const SignUpScreen = () => {
         navigation.navigate('Login');
     };
 
+    const validation = (): boolean => {
+        const newErrors: SignupError = {};
+
+        if (!email.trim()) {
+            newErrors.email = "Email is required";
+        } else if (!email.includes("@")) {
+            newErrors.email = "Invalid email: @ is missing";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+            newErrors.email = "Invalid email format";
+        } else if (email.includes(" ")) {
+            newErrors.email = "Email should not contain spaces";
+        }
+
+        if (!username.trim()) {
+            newErrors.username = "Username is required";
+        } else if (username.length < 3) {
+            newErrors.username = "Username must be at least 3 characters long";
+        } else if (username.length > 20) {
+            newErrors.username = "Username must not exceed 20 characters";
+        } else if (!/^[a-zA-Z0-9_]+$/.test(username)) {
+            newErrors.username = "Username can only contain letters, numbers, and underscores";
+        }
+
+        if (!password.trim()) {
+            newErrors.password = "Password is required";
+        } else if (password.length < 6) {
+            newErrors.password = "Password must be at least 6 characters long";
+        } else if (!/[a-z]/.test(password)) {
+            newErrors.password = "Password must contain at least one lowercase letter";
+        } else if (!/\d/.test(password)) {
+            newErrors.password = "Password must contain at least one number";
+        } else if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+            newErrors.password = "Password must contain at least one special character";
+        }
+
+        if (!confirmPassword.trim()) {
+            newErrors.password = "Confirm Password is required";
+        } else if (password !== confirmPassword) {
+            newErrors.password = "Passwords must match";
+        }
+        setError(newErrors);
+        return Object.keys(newErrors).length === 0;
+    };
+
+    // useEffect(()=>{
+    //     validation()
+    // }, [email])
+
+
     const handleSignUp = () => {
-        if (!email.includes("@")) {
-            Alert.alert("Please enter a valid email");
+        if(!email.trim()) {
+            const newError: SignupError = {};
+            newError.email = "Please enter email.";
+            setError(newError);
             return;
         }
-        if (password.length < 6) {
-            Alert.alert("Password must contain at least 6 characters");
+        if(!username.trim()) {
+            const newError: SignupError = {};
+            newError.username = "Please enter username.";
+            setError(newError);
             return;
         }
-        if (!confirmPassword || !username) {
-            Alert.alert("Please fill out all fields");
+        if(!password.trim() || !confirmPassword.trim()) {
+            const newError: SignupError = {};
+            newError.password = "Please enter password";
+            setError(newError);
             return;
         }
-        if (password !== confirmPassword) {
-            Alert.alert("Passwords do not match");
+
+        if(! validation()){
+            console.log("validation failed");
             return;
         }
+
 
         setIsLoading(true);
 
@@ -81,13 +148,23 @@ const SignUpScreen = () => {
                 // Simulate a delay and navigate to the home screen
                 setTimeout(() => {
                     setIsLoading(false);
+                    console.log('SignedUp');
                     navigation.navigate("Home");
                 }, 2000);
             })
             .catch((e) => {
                 console.error('Failed to save data to AsyncStorage', e);
+                setIsLoading(false);
             });
     };
+    if (isLoading) {
+        return (
+            <View style={{flex: 1, justifyContent: "center", alignItems: "center"}}>
+                <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+        );
+    }
+
 
     return (
         <View style={styles.mainContainer}>
@@ -110,7 +187,7 @@ const SignUpScreen = () => {
                         )}
                     </TouchableOpacity>
 
-                    <ScrollView showsVerticalScrollIndicator={false}>
+                    <ScrollView contentContainerStyle={{ alignItems: "center", justifyContent: "center" }} showsVerticalScrollIndicator={false}>
 
                         <TextInput
                             style={styles.input}
@@ -142,6 +219,13 @@ const SignUpScreen = () => {
                             value={confirmPassword}
                             secureTextEntry
                         />
+                        {error.email && <Text style={styles.errorMessage}>{error.email}</Text>}
+                        {error.username && <Text style={styles.errorMessage}>{error.username}</Text>}
+                        {error.password && <Text style={styles.errorMessage}>{error.password}</Text>}
+                        {error.confirmPassword && <Text style={styles.errorMessage}>{error.confirmPassword}</Text>}
+
+
+
                         <TouchableOpacity style={styles.button} onPress={handleSignUp}>
                             <Text style={styles.buttonText}>Sign Up</Text>
                         </TouchableOpacity>
@@ -189,6 +273,7 @@ const styles = StyleSheet.create({
         borderColor: "black",
         alignItems: "center",
     },
+
     title: {
         fontSize: 24,
         fontWeight: "bold",
@@ -249,6 +334,10 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#888',
     },
+    errorMessage: {
+        fontSize: 16,
+        color: "red",
+    }
 });
 
 export default SignUpScreen;

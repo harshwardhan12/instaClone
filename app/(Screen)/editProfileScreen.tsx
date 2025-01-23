@@ -121,17 +121,17 @@ const EditProfileScreen = () => {
                     </TouchableOpacity>
                 </View>
 
-                <View style={styles.bottomBar}>
-                    <TouchableOpacity style={styles.bottomBarItem} onPress={() => handleNavigation("Home")}>
-                        <Text style={styles.bottomBarText}>Home</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.bottomBarItem} onPress={() => handleNavigation("Search")}>
-                        <Text style={styles.bottomBarText}>Search</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.bottomBarItem} onPress={() => handleNavigation("Profile")}>
-                        <Text style={styles.bottomBarText}>Profile</Text>
-                    </TouchableOpacity>
-                </View>
+                {/*<View style={styles.bottomBar}>*/}
+                {/*    <TouchableOpacity style={styles.bottomBarItem} onPress={() => handleNavigation("Home")}>*/}
+                {/*        <Text style={styles.bottomBarText}>Home</Text>*/}
+                {/*    </TouchableOpacity>*/}
+                {/*    <TouchableOpacity style={styles.bottomBarItem} onPress={() => handleNavigation("Search")}>*/}
+                {/*        <Text style={styles.bottomBarText}>Search</Text>*/}
+                {/*    </TouchableOpacity>*/}
+                {/*    <TouchableOpacity style={styles.bottomBarItem} onPress={() => handleNavigation("Profile")}>*/}
+                {/*        <Text style={styles.bottomBarText}>Profile</Text>*/}
+                {/*    </TouchableOpacity>*/}
+                {/*</View>*/}
             </ImageBackground>
 
         </View>
@@ -213,25 +213,25 @@ const styles = StyleSheet.create({
         textAlign: 'center',
         color: '#888',
     },
-    bottomBar: {
-        position: "absolute",
-        bottom: 0,
-        left: 0,
-        right: 0,
-        backgroundColor: "black",
-        flexDirection: "row",
-        justifyContent: "space-around",
-        paddingVertical: 10,
-        borderTopWidth: 1,
-        borderTopColor: "#ddd",
-    },
-    bottomBarItem: {
-        alignItems: "center",
-    },
-    bottomBarText: {
-        fontSize: 16,
-        color: "#fff",
-    },
+    // bottomBar: {
+    //     position: "absolute",
+    //     bottom: 0,
+    //     left: 0,
+    //     right: 0,
+    //     backgroundColor: "black",
+    //     flexDirection: "row",
+    //     justifyContent: "space-around",
+    //     paddingVertical: 10,
+    //     borderTopWidth: 1,
+    //     borderTopColor: "#ddd",
+    // },
+    // bottomBarItem: {
+    //     alignItems: "center",
+    // },
+    // bottomBarText: {
+    //     fontSize: 16,
+    //     color: "#fff",
+    // },
 
 });
 

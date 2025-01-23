@@ -3,6 +3,10 @@ import {View, Text, Image, TouchableOpacity, StyleSheet, ScrollView, Dimensions,
 import {useNavigation} from 'expo-router';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+// import Icon from 'react-native-vector-icons/Ionicons';
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+import IoniconsIcons from "react-native-vector-icons/Ionicons";
+
 const {width, height} = Dimensions.get('window');
 const postsPerRow = width > 768 ? 4 : 2;  // Adjust number of posts per row based on screen width
 
@@ -61,14 +65,14 @@ const ProfileScreen = () => {
 
     // Different image URLs for each post
     const postUrls = [
-        "https://i0.wp.com/www.alphr.com/wp-content/uploads/2017/11/How-to-post-a-Live-Photo-on-Instagram1.jpg?fit=900%2C600&ssl=1",
-        "https://i0.wp.com/www.alphr.com/wp-content/uploads/2017/11/How-to-post-a-Live-Photo-on-Instagram1.jpg?fit=900%2C600&ssl=1",
-        "https://i0.wp.com/www.alphr.com/wp-content/uploads/2017/11/How-to-post-a-Live-Photo-on-Instagram1.jpg?fit=900%2C600&ssl=1",
-        "https://i0.wp.com/www.alphr.com/wp-content/uploads/2017/11/How-to-post-a-Live-Photo-on-Instagram1.jpg?fit=900%2C600&ssl=1",
-        "https://i0.wp.com/www.alphr.com/wp-content/uploads/2017/11/How-to-post-a-Live-Photo-on-Instagram1.jpg?fit=900%2C600&ssl=1",
-        "https://i0.wp.com/www.alphr.com/wp-content/uploads/2017/11/How-to-post-a-Live-Photo-on-Instagram1.jpg?fit=900%2C600&ssl=1",
-        "https://i0.wp.com/www.alphr.com/wp-content/uploads/2017/11/How-to-post-a-Live-Photo-on-Instagram1.jpg?fit=900%2C600&ssl=1",
-        "https://i0.wp.com/www.alphr.com/wp-content/uploads/2017/11/How-to-post-a-Live-Photo-on-Instagram1.jpg?fit=900%2C600&ssl=1"
+        "https://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-09.jpg",
+        "https://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-02.jpg",
+        "https://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-14.jpg",
+        "https://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-16.jpg",
+        "https://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-24.jpg",
+        "https://www.thedesignwork.com/wp-content/uploads/2011/10/Random-Pictures-of-Conceptual-and-Creative-Ideas-34.jpg",
+        "https://i.pinimg.com/736x/01/43/4e/01434e083fbbe33f216b64e6cb9d3e6f.jpg",
+        "https://preview.redd.it/i-got-bored-so-i-decided-to-draw-a-random-image-on-the-v0-4ig97vv85vjb1.png?width=640&crop=smart&auto=webp&s=22ed6cc79cba3013b84967f32726d087e539b699",
     ];
 
 
@@ -81,7 +85,9 @@ const ProfileScreen = () => {
                     <View style={styles.profileInfo}>
                         <View style={styles.editProfile}>
                             <Text style={styles.userName}>{userData.name}</Text>
-                            <TouchableOpacity onPress={handleNavigation} style={styles.editProfileButton}>Edit Profile</TouchableOpacity>
+                            <TouchableOpacity onPress={handleNavigation} style={styles.editProfileButton}>
+                                <MaterialCommunityIcons name="account-edit" size={24} color="black" />
+                            </TouchableOpacity>
                         </View>
 
                         <View style={styles.profileStats}>
@@ -125,10 +131,10 @@ const ProfileScreen = () => {
 
             <View style={styles.bottomBar}>
                 <TouchableOpacity style={styles.bottomBarItem} onPress={() => handleNavigationBar("Home")}>
-                    <Text style={styles.bottomBarText}>Home</Text>
+                    <MaterialCommunityIcons name="home-variant" size={24} color="white" />
                 </TouchableOpacity>
                 <TouchableOpacity style={styles.bottomBarItem} onPress={() => handleNavigationBar("Search")}>
-                    <Text style={styles.bottomBarText}>Search</Text>
+                    <IoniconsIcons name="search-outline" size={24} color="white" />
                 </TouchableOpacity>
 
             </View>
@@ -170,10 +176,14 @@ const styles = StyleSheet.create({
         justifyContent: 'space-between',
     },
     editProfileButton: {
-        backgroundColor: '#262626',
-        borderRadius: 5,
-        paddingVertical: 6,
-        paddingHorizontal: 12,
+        width: 35,
+        height: 35,
+        justifyContent: 'center',
+        alignItems: 'center',
+
+        backgroundColor: 'white',
+        borderRadius: 50,
+        borderWidth: 2,
         fontSize: 16,
         color: 'white',
     },

@@ -2,14 +2,25 @@ import React, { useState, useEffect } from "react";
 import { View, Text, ScrollView, Image, StyleSheet, TouchableOpacity, Dimensions, Animated } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useNavigation } from "expo-router";
+
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
+import MaterialCommunityIcons from "react-native-vector-icons/MaterialCommunityIcons";
+
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesomeIcons from 'react-native-vector-icons/FontAwesome';
+
+import Ionicons from 'react-native-vector-icons/Ionicons';
+import IoniconsIcons from 'react-native-vector-icons/Ionicons';
+import Feather from 'react-native-vector-icons/Feather';
 
 const { width } = Dimensions.get("window");
 
 const posts = [
   {
     id: 1,
-    user: "User1",
+    user: "Jane",
+    profileImage: "https://plus.unsplash.com/premium_photo-1668485966810-cbd0f685f58f?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Z2lybHxlbnwwfHwwfHx8MA%3D%3D  ",
+
     image:
       "https://images.unsplash.com/photo-1736478770857-ed521c3b469c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzMnx8fGVufDB8fHx8fA%3D%3D",
     caption: "Caption 1",
@@ -17,16 +28,34 @@ const posts = [
   {
     id: 2,
     user: "User2",
+    profileImage: '',
     image:
-      "https://images.unsplash.com/photo-1736478770857-ed521c3b469c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzMnx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1736754075245-2d2a75639fea?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHw1Mnx8fGVufDB8fHx8fA%3D%3D",
     caption: "Caption 2",
   },
   {
     id: 3,
     user: "User3",
+    profileImage: '',
     image:
-      "https://images.unsplash.com/photo-1736478770857-ed521c3b469c?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxmZWF0dXJlZC1waG90b3MtZmVlZHwzMnx8fGVufDB8fHx8fA%3D%3D",
+      "https://images.unsplash.com/photo-1736754079627-b6ca8f3f93b0?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1yZWxhdGVkfDF8fHxlbnwwfHx8fHw%3D",
     caption: "Caption 3",
+  },
+  {
+    id: 4,
+    user: "User4",
+    profileImage: 'https://images.unsplash.com/photo-1480455624313-e29b44bbfde1?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Nnx8bWFufGVufDB8fDB8fHww',
+    image:
+        "https://plus.unsplash.com/premium_photo-1707486533473-e2bcf3e9cd01?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8bWFuJTIwcGxheWluZ3xlbnwwfHwwfHx8MA%3D%3D",
+    caption: "Caption 4",
+  },
+  {
+    id: 5,
+    user: "User5",
+    profileImage: 'https://plus.unsplash.com/premium_photo-1689977968861-9c91dbb16049?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8bWFufGVufDB8fDB8fHww',
+    image:
+        "https://images.unsplash.com/photo-1500027202745-eec1ad6523cd?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTB8fG1hbiUyMHBsYXlpbmd8ZW58MHx8MHx8fDA%3D",
+    caption: "Caption 5",
   },
 ];
 
@@ -38,6 +67,14 @@ const HomeScreen: React.FC = () => {
     email: "",
     profilePicture: "",
   });
+  const [likedPosts, setLikedPosts] = useState({});
+
+  const toggleLike = (postId) => {
+    setLikedPosts((prev) => ({
+      ...prev,
+      [postId]: !prev[postId],
+    }));
+  }
 
   useEffect(() => {
     const getUserData = async () => {
@@ -47,7 +84,7 @@ const HomeScreen: React.FC = () => {
         const userProfilePicture = await AsyncStorage.getItem('profilePicture');
         
         if (userName && userEmail) {
-          const profilePic = userProfilePicture || 'https://media.istockphoto.com/id/2166146715/photo/close-up-of-a-cat-looking-away.webp?a=1&b=1&s=612x612&w=0&k=20&c=RX7FVxEZq4hnKJXXXQHIclBN_bjz1CbPstoISeBcfSY='; // Default profile picture
+          const profilePic = userProfilePicture || 'https://i.pinimg.com/736x/5b/30/5f/5b305fca208d6162872c715f4c7643e1.jpg'
   
           setUserData({
             name: userName,
@@ -59,26 +96,26 @@ const HomeScreen: React.FC = () => {
           setStories([
             {
               id: 1,
-              name: userName, // Dynamic username
+              name: "Your story",
               image: profilePic, // Dynamic profile picture
             },
             {
               id: 2,
-              name: "user2",
-              image: "",
+              name: "ig_sophia",
+              image: "https://images.unsplash.com/photo-1514626585111-9aa86183ac98?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTV8fGZhY2V8ZW58MHx8MHx8fDA%3D",
             },
             {
-              id: 2,
-              name: "user3",
-              image: "",
+              id: 3,
+              name: "olivia_12",
+              image: "https://media.istockphoto.com/id/1437816897/photo/business-woman-manager-or-human-resources-portrait-for-career-success-company-we-are-hiring.webp?a=1&b=1&s=612x612&w=0&k=20&c=u5RPl326UFf1oyrM1iLFJtqdQ3K28TdBdSaSPKeCrdc=",
             },{
-              id: 2,
-              name: "user4",
-              image: "",
+              id: 4,
+              name: "emma",
+              image: "https://images.unsplash.com/photo-1506863530036-1efeddceb993?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTh8fHByb2ZpbGV8ZW58MHx8MHx8fDA%3D",
             },{
-              id: 2,
-              name: "user5",
-              image: "",
+              id: 5,
+              name: "ethan",
+              image: "https://media.istockphoto.com/id/1285124274/photo/middle-age-man-portrait.webp?a=1&b=1&s=612x612&w=0&k=20&c=wQTkPBW1rlfaFAkKanmLbpmEtiWWVH33UkndM1ib1-o=",
             },
           ]);
         }
@@ -109,7 +146,7 @@ const HomeScreen: React.FC = () => {
       <View style={styles.headerContainer}>
         <Text style={styles.instagramText}>Instagram</Text>
         <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
-          <Text style={styles.logoutText}>Logout <Icon name="logout" size={15} color="white" /></Text>
+           <Icon name="logout" size={20} color="white" />
         </TouchableOpacity>
       </View>
 
@@ -117,7 +154,7 @@ const HomeScreen: React.FC = () => {
         style={styles.container}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={styles.scrollContent}
-      >       
+      >
         <View style={styles.storiesContainer}>
           <ScrollView
             horizontal
@@ -140,9 +177,37 @@ const HomeScreen: React.FC = () => {
           <ScrollView contentContainerStyle={styles.postsContentContainer}>
             {posts.map((post) => (
               <View key={post.id} style={styles.post}>
-                <Text style={styles.postUser}>{post.user}</Text>
+
+                <View style={styles.postHeader}>
+                  <Image source={{ uri: post.profileImage }} style={styles.profileImage} />
+                  <Text style={styles.postUser}>{post.user}</Text>
+                </View>
+
                 <Image source={{ uri: post.image }} style={styles.postImage} />
-                <Text style={styles.postCaption}>{post.caption}</Text>
+
+                <View style={styles.iconsContainer}>
+                  <TouchableOpacity onPress={() => toggleLike(post.id)}>
+                    <FontAwesome
+                        name={likedPosts[post.id] ? 'heart' : 'heart-o'}
+                        size={24}
+                        color={likedPosts[post.id] ? '#e74c3c' : '#333'}
+                        style={styles.icon}
+                    />
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Ionicons name="chatbubble-outline" size={24} color="#333" style={styles.icon} />
+                  </TouchableOpacity>
+                  <TouchableOpacity>
+                    <Feather name="send" size={24} color="#333" style={styles.icon} />
+                  </TouchableOpacity>
+
+                </View>
+
+                <View style={styles.captionContainer}>
+                  <Text style={styles.postUser}>{post.user}</Text>
+                  <Text style={styles.postCaption}>{post.caption}</Text>
+                </View>
+
               </View>
             ))}
           </ScrollView>
@@ -151,13 +216,13 @@ const HomeScreen: React.FC = () => {
 
       <View style={styles.bottomBar}>
         <TouchableOpacity style={styles.bottomBarItem} onPress={() => handleNavigation("Home")}>
-          <Text style={styles.bottomBarText}>Home</Text>
+          <MaterialCommunityIcons name="home-variant" size={24} color="white" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.bottomBarItem} onPress={() => handleNavigation("Search")}>
-          <Text style={styles.bottomBarText}>Search</Text>
+          <IoniconsIcons name="search-outline" size={24} color="white" />
         </TouchableOpacity>
         <TouchableOpacity style={styles.bottomBarItem} onPress={() => handleNavigation("Profile")}>
-          <Text style={styles.bottomBarText}>Profile</Text>
+          <MaterialCommunityIcons name="account" size={24} color="white" />
         </TouchableOpacity>
       </View>
     </View>
@@ -188,13 +253,14 @@ const styles = StyleSheet.create({
   },
 
   logoutButton: {
-    backgroundColor: "#ff4d4d",
-    paddingVertical: 5,
-    paddingHorizontal: 15,
-    borderRadius: 5,
+    backgroundColor: "#FF3B30",
+
+    width: 40, // Adjust size as needed
+    height: 40, // Must be equal to width
+    borderRadius: 25,
     display: "flex",
-    alignItems: "center",
     justifyContent: "center",
+    alignItems: "center"
   },
   logoutText: {
     color: "#fff",
@@ -207,11 +273,11 @@ const styles = StyleSheet.create({
     borderBottomColor: "#ddd",
     // marginTop: 1,
     paddingVertical: 4,
-    backgroundColor: "grey",
+    backgroundColor: "white",
     flex: 1
   },
   storiesContentContainer: {
-    alignItems: "center", // Moved from story styles to here
+    alignItems: "center",
   },
   story: {
     alignItems: "center",
@@ -222,10 +288,10 @@ const styles = StyleSheet.create({
     height: 75,
     borderRadius: "50%",
     marginBottom: 5,
-    backgroundColor: "orange",
+    backgroundColor: "grey",
   },
   storyText: {
-    fontSize: 12,
+    fontSize: 16,
   },
 
   postsContainer: {
@@ -239,18 +305,50 @@ const styles = StyleSheet.create({
   post: {
     marginBottom: 20,
   },
+
+  postHeader: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 5,
+    marginBottom: 5,
+    marginLeft: 10,
+    gap: 5,
+  },
   postUser: {
     fontWeight: "bold",
-    marginBottom: 5,
+  },
+  profileImage: {
+    width: 40,
+    height: 40,
+    borderRadius: 20,  // Makes it circular
+    backgroundColor: '#ddd',  // Default background if the image doesn't load
   },
   postImage: {
     width: 375,
     height: 300,
     marginBottom: 5,
+    borderRadius: 8,
   },
+
+  iconsContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+  icon: {
+    marginHorizontal: 10,
+  },
+
   postCaption: {
-    marginTop: 5,
     fontSize: 14,
+  },
+  captionContainer: {
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 5,
+    marginLeft: 10,
+    marginTop: 5,
   },
 
   bottomBar: {
@@ -275,3 +373,81 @@ const styles = StyleSheet.create({
 });
 
 export default HomeScreen;
+
+
+
+
+
+// import React, { useState, useEffect } from "react";
+// import { View, Text, Button, FlatList, StyleSheet } from "react-native";
+// import axios from "axios";
+//
+// interface Movie {
+//   id: number;
+//   title: string;
+// }
+//
+// const MovieComponent = () => {
+//   const [movies, setMovies] = useState<Movie[]>([]); // State to store movie list
+//
+//   // Function to search and fetch movies
+//   const searchMovies = async () => {
+//     try {
+//       const response = await axios.get(
+//         "https://api.themoviedb.org/3/movie/popular?api_key=6d7357adb38c7066d89391d1b0e62a6b"
+//       );
+//       setMovies(response.data.results); // TMDb returns movies in 'results'
+//       // console.log('hi')
+//       console.log("Movies fetched:", response.data.results);
+//     } catch (error) {
+//       console.error("Error fetching movies:", error);
+//     }
+//   };
+//
+//   // Function to list movies (logs movie titles to console)
+//   const getMovies = () => {
+//     console.log("Movies list:");
+//     movies.map((movie, index) => {
+//       console.log(`${index + 1}`); // Log movie titles
+//     });
+//   };
+//
+//   useEffect(() => {
+//     searchMovies(); // Fetch movies when the component mounts
+//   }, []);
+//
+//   return (
+//     <View style={styles.container}>
+//       <Text style={styles.title}>Movie List</Text>
+//       <Button title="Log Movies" onPress={getMovies} />
+//       <FlatList
+//         data={movies}
+//         keyExtractor={(item) => item.id.toString()} // Use movie ID as the key
+//         renderItem={({ item }) => (
+//           <Text style={styles.movieItem}>{item.title}</Text> // Display movie titles
+//         )}
+//       />
+//     </View>
+//   );
+// };
+//
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     padding: 20,
+//     backgroundColor: "#fff",
+//   },
+//   title: {
+//     fontSize: 24,
+//     fontWeight: "bold",
+//     marginBottom: 10,
+//   },
+//   movieItem: {
+//     fontSize: 18,
+//     marginVertical: 5,
+//     color: "#333",
+//   },
+// });
+//
+// export default MovieComponent;
+//
